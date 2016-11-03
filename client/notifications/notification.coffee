@@ -3,11 +3,8 @@
 # group messages in which the user is mentioned.
 
 Meteor.startup ->
-
 	Tracker.autorun ->
-
 		if Meteor.userId()
-
 			RocketChat.Notifications.onUser 'notification', (notification) ->
 
 				openedRoomId = undefined
@@ -18,9 +15,17 @@ Meteor.startup ->
 				hasFocus = readMessage.isEnable()
 				messageIsInOpenedRoom = openedRoomId is notification.payload.rid
 
-				if !(hasFocus and messageIsInOpenedRoom)
-					# Play a sound.
-					KonchatNotification.newMessage()
+				fireGlobalEvent 'notification',
+					notification: notification
+					fromOpenedRoom: messageIsInOpenedRoom
+					hasFocus: hasFocus
 
-					# Show a notification.
+				if RocketChat.Layout.isEmbedded()
+					if !hasFocus and messageIsInOpenedRoom
+						# Play a sound and show a notification.
+						KonchatNotification.newMessage()
+						KonchatNotification.showDesktop notification
+				else if !(hasFocus and messageIsInOpenedRoom)
+					# Play a sound and show a notification.
+					KonchatNotification.newMessage()
 					KonchatNotification.showDesktop notification
