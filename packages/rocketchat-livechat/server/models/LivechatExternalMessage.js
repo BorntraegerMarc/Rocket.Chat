@@ -1,6 +1,7 @@
 class LivechatExternalMessage extends RocketChat.models._Base {
 	constructor() {
-		super('livechat_external_message');
+		super();
+		this._initModel('livechat_external_message');
 	}
 
 	// FIND

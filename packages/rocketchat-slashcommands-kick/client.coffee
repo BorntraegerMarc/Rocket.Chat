@@ -4,5 +4,5 @@ RocketChat.slashCommands.add 'kick', (command, params, item) ->
 		return
 	username = username.replace('@', '')
 ,
-	description: 'Remove_someone_from_room'
+	description: TAPi18n.__ 'Remove_someone_from_room'
 	params: '@username'

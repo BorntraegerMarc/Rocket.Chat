@@ -1,5 +1,5 @@
 <template name="messagePopupConfig">
-	<div class="message-popup-results">
+	<div class="message-popup-results {{subscriptionNotReady}}">
 		{{#if emojiEnabled}}
 			{{> messagePopup popupEmojiConfig}}
 		{{/if}}

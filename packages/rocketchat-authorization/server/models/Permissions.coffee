@@ -1,6 +1,6 @@
-class ModelPermissions extends RocketChat.models._Base
+RocketChat.models.Permissions = new class extends RocketChat.models._Base
 	constructor: ->
-		super(arguments...)
+		@_initModel 'permissions'
 
 	# FIND
 	findByRole: (role, options) ->
@@ -22,4 +22,3 @@ class ModelPermissions extends RocketChat.models._Base
 		@update({ _id: permission }, { $pull: { roles: role } })
 
 
-RocketChat.models.Permissions = new ModelPermissions('permissions')

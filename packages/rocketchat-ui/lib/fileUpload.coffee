@@ -27,9 +27,8 @@ readAsArrayBuffer = (file, callback) ->
 			if not RocketChat.fileUploadIsValidContentType file.file.type
 				swal
 					title: t('FileUpload_MediaType_NotAccepted')
-					text: file.file.type || "*.#{s.strRightBack(file.file.name, '.')}"
 					type: 'error'
-					timer: 3000
+					timer: 1000
 				return
 
 			if file.file.size is 0
@@ -82,49 +81,61 @@ readAsArrayBuffer = (file, callback) ->
 				if isConfirm isnt true
 					return
 
-				record =
-					name: file.name or file.file.name
-					size: file.file.size
-					type: file.file.type
-					rid: roomId
+				readAsArrayBuffer file.file, (data) ->
+					record =
+						name: file.name or file.file.name
+						size: file.file.size
+						type: file.file.type
+						rid: roomId
 
-				upload = fileUploadHandler record, file.file
+					upload = fileUploadHandler record, file.file, data
 
-				upload.onProgress = (progress) ->
-					uploading = Session.get('uploading') or []
+					# // Reactive method to get upload progress
+					Tracker.autorun (c) ->
+						uploading = undefined
+						cancel = undefined
 
-					item = _.findWhere(uploading, {id: upload.id})
+						Tracker.nonreactive ->
+							cancel = Session.get "uploading-cancel-#{upload.id}"
+							uploading = Session.get 'uploading'
 
-					if not item?
-						item =
-							id: upload.id
-							name: upload.getFileName()
+						if cancel
+							return c.stop()
 
-						uploading.push item
+						uploading ?= []
 
-					item.percentage = Math.round(progress * 100) or 0
-					Session.set 'uploading', uploading
+						item = _.findWhere(uploading, {id: upload.id})
 
-				upload.start()
+						if not item?
+							item =
+								id: upload.id
+								name: upload.getFileName()
 
-				Tracker.autorun (c) ->
-					cancel = Session.get "uploading-cancel-#{upload.id}"
-					if cancel
-						upload.stop()
-						c.stop()
+							uploading.push item
 
-						uploading = Session.get 'uploading'
-						if uploading?
-							item = _.findWhere(uploading, {id: upload.id})
-							if item?
-								item.percentage = 0
-							Session.set 'uploading', uploading
+						item.percentage = Math.round(upload.getProgress() * 100) or 0
+						Session.set 'uploading', uploading
 
-						Meteor.setTimeout ->
+					upload.start();
+
+					Tracker.autorun (c) ->
+						cancel = Session.get "uploading-cancel-#{upload.id}"
+						if cancel
+							upload.stop()
+							c.stop()
+
 							uploading = Session.get 'uploading'
 							if uploading?
 								item = _.findWhere(uploading, {id: upload.id})
-								Session.set 'uploading', _.without(uploading, item)
-						, 1000
+								if item?
+									item.percentage = 0
+								Session.set 'uploading', uploading
+
+							Meteor.setTimeout ->
+								uploading = Session.get 'uploading'
+								if uploading?
+									item = _.findWhere(uploading, {id: upload.id})
+									Session.set 'uploading', _.without(uploading, item)
+							, 1000
 
 	consume()

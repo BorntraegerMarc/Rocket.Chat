@@ -2,7 +2,6 @@
 **/build/*
 **/node_modules/*
 **/tmp/*
-**/.meteor/dev_bundle
 /private/certs/*
 *.bak
 *.iml
@@ -69,4 +68,3 @@ ecosystem.json
 pm2.json
 settings.json
 build.sh
-/public/livechat

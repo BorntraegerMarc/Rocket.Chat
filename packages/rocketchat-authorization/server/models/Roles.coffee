@@ -1,6 +1,6 @@
 RocketChat.models.Roles = new class extends RocketChat.models._Base
 	constructor: ->
-		super('roles')
+		@_initModel 'roles'
 		@tryEnsureIndex { 'name': 1 }
 		@tryEnsureIndex { 'scope': 1 }
 

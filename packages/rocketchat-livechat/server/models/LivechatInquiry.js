@@ -1,6 +1,7 @@
 class LivechatInquiry extends RocketChat.models._Base {
 	constructor() {
-		super('livechat_inquiry');
+		super();
+		this._initModel('livechat_inquiry');
 
 		this.tryEnsureIndex({ 'rid': 1 }); // room id corresponding to this inquiry
 		this.tryEnsureIndex({ 'name': 1 }); // name of the inquiry (client name for now)

@@ -11,33 +11,21 @@ try {
 }
 
 class ModelsBase extends EventEmitter {
-	constructor(model) {
-		super();
+	_baseName() {
+		return baseName;
+	}
 
-		if (Match.test(model, String)) {
-			this.name = model;
-			this.collectionName = this.baseName + this.name;
-			this.model = new Mongo.Collection(this.collectionName);
-		} else {
-			this.name = model._name;
-			this.collectionName = this.name;
-			this.model = model;
-		}
+	_initModel(name) {
+		check(name, String);
+
+		this.name = name;
+
+		this.model = new Mongo.Collection(this._baseName() + name);
 
 		this.tryEnsureIndex({ '_updatedAt': 1 });
 	}
 
-	get baseName() {
-		return baseName;
-	}
-
-	setUpdatedAt(record = {}, checkQuery = false, query) {
-		if (checkQuery === true) {
-			if (!query || Object.keys(query).length === 0) {
-				throw new Meteor.Error('Models._Base: Empty query');
-			}
-		}
-
+	setUpdatedAt(record = {}) {
 		if (/(^|,)\$/.test(Object.keys(record).join(','))) {
 			record.$set = record.$set || {};
 			record.$set._updatedAt = new Date;
@@ -67,7 +55,7 @@ class ModelsBase extends EventEmitter {
 	}
 
 	update(query, update, options = {}) {
-		this.setUpdatedAt(update, true, query);
+		this.setUpdatedAt(update);
 
 		if (options.upsert) {
 			return this.upsert(query, update);
@@ -86,15 +74,15 @@ class ModelsBase extends EventEmitter {
 			}
 		}
 
+		query = { _id: { $in: _.pluck(ids, '_id') } };
 		const result = this.model.update(query, update, options);
-		const idQuery = { _id: { $in: _.pluck(ids, '_id') } };
-		this.emit('update', idQuery, update);
-		this.emit('change', 'update', idQuery, update);
+		this.emit('update', query, update);
+		this.emit('change', 'update', query, update);
 		return result;
 	}
 
 	upsert(query, update) {
-		this.setUpdatedAt(update, true, query);
+		this.setUpdatedAt(update);
 
 		const id = this.model.findOne(query, { fields: { _id: 1 } });
 		const result = this.model.upsert(...arguments);
@@ -119,7 +107,7 @@ class ModelsBase extends EventEmitter {
 			record._deletedAt = new Date;
 			record.__collection__ = this.name;
 
-			trash.upsert({_id: record._id}, _.omit(record, '_id'));
+			trash.insert(record);
 		}
 
 		query = { _id: { $in: ids } };

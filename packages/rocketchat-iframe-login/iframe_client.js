@@ -27,7 +27,7 @@ class IframeLogin {
 				return c.stop();
 			}
 
-			if (this.enabled === true && this.iframeUrl && this.apiUrl && this.apiMethod) {
+			if (this.enabled === true && this.iframeUrl && this.apiUrl && this.apiMethod && FlowRouter.subsReady('userData', 'activeUsers')) {
 				c.stop();
 				if (!Accounts._storedLoginToken()) {
 					this.tryLogin(() => {});
@@ -67,7 +67,9 @@ class IframeLogin {
 		HTTP.call(this.apiMethod, this.apiUrl, options, (error, result) => {
 			console.log(error, result);
 			if (result && result.data && result.data.token) {
-				this.loginWithToken(result.data, (error, result) => {
+				// TODO get from api
+				// result.data.token = 'yaMadZ1RMBdMzs6kGycKybrHVptoDl7nokxtorz1me0';
+				this.loginWithToken(result.data.token, (error, result) => {
 					if (error) {
 						this.reactiveIframeUrl.set(iframeUrl);
 					} else {
@@ -87,24 +89,15 @@ class IframeLogin {
 			return;
 		}
 
-		if (Match.test(token, String)) {
-			token = {
-				token: token
-			};
-		}
-
 		console.log('loginWithToken');
-
-		if (token.loginToken) {
-			return Meteor.loginWithToken(token.loginToken, callback);
-		}
-
 		Accounts.callLoginMethod({
 			methodArguments: [{
 				iframe: true,
-				token: token.token
+				token: token
 			}],
-			userCallback: callback
+			userCallback: (err) => {
+				callback(err);
+			}
 		});
 	}
 }
@@ -138,6 +131,8 @@ window.addEventListener('message', (e) => {
 		return;
 	}
 
+	console.log(e);
+
 	switch (e.data.event) {
 		case 'try-iframe-login':
 			RocketChat.iframeLogin.tryLogin((error) => {
@@ -151,7 +146,7 @@ window.addEventListener('message', (e) => {
 			break;
 
 		case 'login-with-token':
-			RocketChat.iframeLogin.loginWithToken(e.data, (error) => {
+			RocketChat.iframeLogin.loginWithToken(e.data.token, (error) => {
 				if (error) {
 					e.source.postMessage({
 						event: 'login-error',

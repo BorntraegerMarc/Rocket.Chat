@@ -1,9 +1,5 @@
 Meteor.methods
 	'robot.modelCall': (model, method, args) ->
-
-		check model, String
-		check method, String
-
 		unless Meteor.userId()
 			throw new Meteor.Error 'error-invalid-user', 'Invalid user', { method: 'robot.modelCall' }
 

@@ -1,6 +1,6 @@
-# Custom OAuth
+# gitlab
 
-An implementation of the OAuth2 flow. It works with your own private OAuth2 server instance.
+An implementation of the GitLab OAuth2 flow. It works with your own private GitLab server instance.  
 
 This software is supplied courtesy of the [Rocket.Chat](https://rocket.chat/) open source communications platform.
 

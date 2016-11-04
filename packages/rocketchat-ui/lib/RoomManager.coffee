@@ -42,7 +42,7 @@ Tracker.autorun ->
 	if Meteor.userId()
 		RocketChat.Notifications.onUser 'message', (msg) ->
 			msg.u =
-				username: 'rocket.cat'
+				username: 'rocketbot'
 			msg.private = true
 
 			ChatMessage.upsert { _id: msg._id }, msg
@@ -54,6 +54,14 @@ Tracker.autorun ->
 	onlineUsers = new ReactiveVar {}
 
 	Dep = new Tracker.Dependency
+
+	init = ->
+		if CachedChatSubscription.ready.get()
+			return
+
+		CachedChatSubscription.init()
+
+		return
 
 	close = (typeName) ->
 		if openedRooms[typeName]
@@ -130,8 +138,6 @@ Tracker.autorun ->
 											RoomManager.updateMentionsMarksOfRoom typeName
 
 										RocketChat.callbacks.run 'streamMessage', msg
-
-										window.fireGlobalEvent('new-message', msg);
 
 							RocketChat.Notifications.onRoom openedRooms[typeName].rid, 'deleteMessage', onDeleteMessageStream
 
@@ -239,6 +245,7 @@ Tracker.autorun ->
 	open: open
 	close: close
 	closeAllRooms: closeAllRooms
+	init: init
 	getDomOfRoom: getDomOfRoom
 	existsDomOfRoom: existsDomOfRoom
 	msgStream: msgStream
@@ -247,7 +254,6 @@ Tracker.autorun ->
 	onlineUsers: onlineUsers
 	updateMentionsMarksOfRoom: updateMentionsMarksOfRoom
 	getOpenedRoomByRid: getOpenedRoomByRid
-	computation: computation
 
 
 RocketChat.callbacks.add 'afterLogoutCleanUp', ->

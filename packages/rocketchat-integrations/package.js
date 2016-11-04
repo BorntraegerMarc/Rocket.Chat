@@ -7,6 +7,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+	api.versionsFrom('1.0');
+
 	api.use('coffeescript');
 	api.use('underscore');
 	api.use('ecmascript');
@@ -41,7 +43,6 @@ Package.onUse(function(api) {
 	api.addFiles('client/stylesheets/load.coffee', 'server');
 
 	api.addFiles('server/logger.js', 'server');
-	api.addFiles('server/lib/validation.coffee', 'server');
 
 	api.addFiles('server/models/Integrations.coffee', 'server');
 

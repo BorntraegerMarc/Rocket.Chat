@@ -1,4 +1,4 @@
 RocketChat.slashCommands.add('archive', null, {
-	description: 'Archive',
+	description: TAPi18n.__('Archive'),
 	params: '#channel'
 });

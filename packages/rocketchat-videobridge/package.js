@@ -6,10 +6,12 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+	api.versionsFrom('1.0');
+
 	api.use([
 		'ecmascript',
 		'underscore',
-		'less',
+		'less@2.5.0',
 		'rocketchat:lib'
 	]);
 
@@ -22,9 +24,7 @@ Package.onUse(function(api) {
 	api.addFiles('client/views/videoFlexTab.js', 'client');
 	api.addFiles('client/tabBar.js', 'client');
 	api.addFiles('client/actionLink.js', 'client');
-
-	//Need to register the messageType with both the server and client
-	api.addFiles('lib/messageType.js', ['client', 'server']);
+	api.addFiles('client/messageType.js', 'client');
 
 	api.addFiles('server/settings.js', 'server');
 	api.addFiles('server/models/Rooms.js', 'server');

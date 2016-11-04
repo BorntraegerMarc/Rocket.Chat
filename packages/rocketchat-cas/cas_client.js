@@ -32,8 +32,7 @@ Meteor.loginWithCas = function(options, callback) {
 		return;
 	}
 
-	var appUrl = Meteor.absoluteUrl().replace(/\/$/, '') + __meteor_runtime_config__.ROOT_URL_PATH_PREFIX;
-	var loginUrl = login_url + '?service=' + appUrl + '/_cas/' + credentialToken;
+	var loginUrl = login_url + '?service=' + Meteor.absoluteUrl('_cas/') + credentialToken;
 
 	var popup = openCenteredPopup(
 		loginUrl,

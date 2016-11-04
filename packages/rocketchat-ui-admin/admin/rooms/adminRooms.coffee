@@ -48,7 +48,7 @@ Template.adminRooms.onCreated ->
 		groups: ['adminrooms'],
 		id: 'admin-room',
 		i18nTitle: 'Room_Info',
-		icon: 'icon-info-circled',
+		icon: 'icon-info',
 		template: 'adminRoomInfo',
 		order: 1
 	});
@@ -83,7 +83,7 @@ Template.adminRooms.onCreated ->
 
 		filter = _.trim filter
 		if filter
-			filterReg = new RegExp s.escapeRegExp(filter), "i"
+			filterReg = new RegExp filter, "i"
 			query = { $or: [ { name: filterReg }, { t: 'd', usernames: filterReg } ] }
 
 		if types.length

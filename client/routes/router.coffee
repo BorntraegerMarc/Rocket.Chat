@@ -6,6 +6,7 @@ BlazeLayout.setRoot 'body'
 FlowRouter.subscriptions = ->
 	Tracker.autorun =>
 		if Meteor.userId()
+			RoomManager.init()
 			@register 'userData', Meteor.subscribe('userData')
 			@register 'activeUsers', Meteor.subscribe('activeUsers')
 
@@ -14,7 +15,7 @@ FlowRouter.route '/',
 	name: 'index'
 
 	action: ->
-		BlazeLayout.render 'main', { modal: RocketChat.Layout.isEmbedded(), center: 'loading' }
+		BlazeLayout.render 'main', {center: 'loading'}
 		if not Meteor.userId()
 			return FlowRouter.go 'home'
 
@@ -23,7 +24,7 @@ FlowRouter.route '/',
 				Meteor.defer ->
 					if Meteor.user().defaultRoom?
 						room = Meteor.user().defaultRoom.split('/')
-						FlowRouter.go room[0], { name: room[1] }, FlowRouter.current().queryParams
+						FlowRouter.go room[0], {name: room[1]}
 					else
 						FlowRouter.go 'home'
 				c.stop()

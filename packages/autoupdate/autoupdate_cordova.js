@@ -320,8 +320,3 @@ Meteor.startup(Autoupdate._retrySubscription);
 //   }
 // };
 
-window.WebAppLocalServer = {};
-WebAppLocalServer.startupDidComplete = function() {};
-WebAppLocalServer.checkForUpdates = function() {};
-WebAppLocalServer.onNewVersionReady = function() {};
-WebAppLocalServer.onError = function() {};

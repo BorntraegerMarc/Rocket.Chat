@@ -1,6 +1,6 @@
 RocketChat.models.Reports = new class extends RocketChat.models._Base
 	constructor: ->
-		super('reports')
+		@_initModel 'reports'
 
 
 	# INSERT

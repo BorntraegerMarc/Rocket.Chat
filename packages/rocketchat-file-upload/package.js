@@ -8,6 +8,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+	api.versionsFrom('1.2.1');
 	api.use('ecmascript');
 	api.use('rocketchat:file');
 	api.use('jalik:ufs');
@@ -44,9 +45,4 @@ Package.onUse(function(api) {
 
 	api.export('fileUploadHandler');
 	api.export('FileUpload');
-});
-
-Npm.depends({
-	'mime-types': '2.1.11',
-	'filesize': '3.3.0'
 });

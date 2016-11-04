@@ -4,12 +4,7 @@ msgStream.allowWrite('none')
 
 msgStream.allowRead (eventName) ->
 	try
-		room = Meteor.call 'canAccessRoom', eventName, this.userId
-		if not room
-			return false
-
-		if room.t is 'c' and not RocketChat.authz.hasPermission(this.userId, 'preview-c-room') and room.usernames.indexOf(room.username) is -1
-			return false
+		return false if not Meteor.call 'canAccessRoom', eventName, this.userId
 
 		return true
 	catch e
@@ -41,6 +36,6 @@ Meteor.startup ->
 		records = RocketChat.models.Messages.getChangedRecords type, args[0], fields
 
 		for record in records
-			if record._hidden isnt true and not record.imported?
+			if record._hidden isnt true
 				msgStream.emit '__my_messages__', record, {}
 				msgStream.emit record.rid, record

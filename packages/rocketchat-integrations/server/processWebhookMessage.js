@@ -22,7 +22,15 @@ this.processWebhookMessage = function(messageObj, user, defaultValues) {
 
 		switch (channelType) {
 			case '#':
-				room = RocketChat.models.Rooms.findOneByIdOrName(channel);
+				room = RocketChat.models.Rooms.findOne({
+					$or: [
+						{
+							_id: channel
+						}, {
+							name: channel
+						}
+					]
+				});
 				if (!_.isObject(room)) {
 					throw new Meteor.Error('invalid-channel');
 				}
@@ -44,14 +52,18 @@ this.processWebhookMessage = function(messageObj, user, defaultValues) {
 					]
 				}) || {};
 				rid = [user._id, roomUser._id].sort().join('');
-				room = RocketChat.models.Rooms.findOneById({$in: [rid, channel]});
+				room = RocketChat.models.Rooms.findOne({
+					_id: {
+						$in: [rid, channel]
+					}
+				});
 				if (!_.isObject(roomUser) && !_.isObject(room)) {
 					throw new Meteor.Error('invalid-channel');
 				}
 				if (!room) {
 					Meteor.runAsUser(user._id, function() {
 						Meteor.call('createDirectMessage', roomUser.username);
-						room = RocketChat.models.Rooms.findOneById(rid);
+						room = RocketChat.models.Rooms.findOne(rid);
 					});
 				}
 				break;
@@ -70,7 +82,7 @@ this.processWebhookMessage = function(messageObj, user, defaultValues) {
 			attachments: messageObj.attachments,
 			parseUrls: messageObj.parseUrls !== undefined ? messageObj.parseUrls : !messageObj.attachments,
 			bot: messageObj.bot,
-			groupable: (messageObj.groupable !== undefined) ? messageObj.groupable : false
+			groupable: false
 		};
 
 		if (!_.isEmpty(messageObj.icon_url) || !_.isEmpty(messageObj.avatar)) {

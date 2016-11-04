@@ -1,5 +1,3 @@
-`import Clipboard from 'clipboard';`
-
 Template.body.onRendered ->
 	clipboard = new Clipboard('.clipboard')
 
@@ -29,33 +27,12 @@ Template.body.onRendered ->
 					if subscription.alert or subscription.unread > 0
 						Meteor.call 'readMessages', subscription.rid
 
-	$(document.body).on 'keypress', (e) ->
-		target = e.target
-		if /input|textarea|select/i.test(target.tagName)
-			return
-		if $.swipebox.isOpen
-			return
-		$inputMessage = $('textarea.input-message')
-		if 0 == $inputMessage.length
-			return
-		$inputMessage.focus()
-
 	$(document.body).on 'click', 'a', (e) ->
 		link = e.currentTarget
 		if link.origin is s.rtrim(Meteor.absoluteUrl(), '/') and /msg=([a-zA-Z0-9]+)/.test(link.search)
 			e.preventDefault()
 			e.stopPropagation()
-
-			if RocketChat.Layout.isEmbedded()
-				return fireGlobalEvent('click-message-link', { link: link.pathname + link.search })
-
-			FlowRouter.go(link.pathname + link.search, null, FlowRouter.current().queryParams)
-
-		if $(link).hasClass('swipebox')
-			if RocketChat.Layout.isEmbedded()
-				e.preventDefault()
-				e.stopPropagation()
-				fireGlobalEvent('click-image-link', { href: link.href })
+			FlowRouter.go(link.pathname + link.search)
 
 	Tracker.autorun (c) ->
 		w = window
@@ -161,10 +138,7 @@ Template.main.helpers
 		return RocketChat.iframeLogin.reactiveIframeUrl.get()
 
 	subsReady: ->
-		routerReady = FlowRouter.subsReady('userData', 'activeUsers')
-		subscriptionsReady = CachedChatSubscription.ready.get()
-
-		ready = not Meteor.userId()? or (routerReady and subscriptionsReady)
+		ready = not Meteor.userId()? or (FlowRouter.subsReady('userData', 'activeUsers') and CachedChatSubscription.ready.get())
 		RocketChat.CachedCollectionManager.syncEnabled = ready
 		return ready
 
@@ -191,9 +165,6 @@ Template.main.helpers
 
 	CustomScriptLoggedIn: ->
 		RocketChat.settings.get 'Custom_Script_Logged_In'
-
-	embeddedVersion: ->
-		return 'embedded-view' if RocketChat.Layout.isEmbedded()
 
 
 Template.main.events

@@ -255,19 +255,17 @@
 		.message-form {
 			> div {
 				.input-message-container {
-					.inner-left-toolbar {
-						.right(13px);
+					.inner-right-toolbar {
+						.left(10px);
 					}
 				}
 			}
 			textarea {
-				padding-right: 49px;
-				padding-left: 8px;
+				padding-left: 38px;
+				padding-right: 8px;
 				text-align: right;
-				border-left-width: 1px;
-				border-right-width: 0;
 			}
-			> .stream-info {
+			> .users-typing {
 				float: right;
 			 }
 			> .formatting-tips {
@@ -514,8 +512,18 @@
 	}
 
 	.message {
-		padding-left: 20px;
-		padding-right: 70px;
+		padding: 18px 70px 4px 20px;
+		&.new-day {
+			margin-top: 60px;
+			&:before {
+				.right(0);
+				.calc(right,~"50% - 70px");
+			}
+			&:after {
+				.right(0);
+				.margin-right(2%);
+			}
+		}
 		.message-dropdown {
 			.right(-2px);
 			ul {
@@ -664,7 +672,7 @@
 				padding-right: 10px;
 				padding-left: unset;
 				direction: rtl;
-
+				
 			}
 		}
 	}
@@ -707,20 +715,5 @@
 	/* Override toastr messages to show on hte left side */
 	.toast-top-right {
 		.left(12px);
-	}
-
-	.spotlight {
-		> .spotlight-input {
-			.icon-search {
-				left: 0;
-			}
-			.message-popup {
-				.popup-item {
-					span {
-						float: left;
-					}
-				}
-			}
-		}
 	}
 }

@@ -10,8 +10,6 @@ Meteor.startup ->
 	window.lastMessageWindow = {}
 	window.lastMessageWindowHistory = {}
 
-	TAPi18n.conf.i18n_files_route = Meteor._relativeToSiteRootUrl('/tap-i18n')
-
 	@defaultAppLanguage = ->
 		lng = window.navigator.userLanguage || window.navigator.language || 'en'
 		# Fix browsers having all-lowercase language settings eg. pt-br, en-us
@@ -56,10 +54,4 @@ Meteor.startup ->
 			localStorage.setItem('userLanguage', userLanguage)
 
 		setLanguage userLanguage
-
-		status = undefined
-		Tracker.autorun ->
-		  if Meteor.user()?.status isnt status
-		    status = Meteor.user().status
-		    fireGlobalEvent('status-changed', status)
 	)

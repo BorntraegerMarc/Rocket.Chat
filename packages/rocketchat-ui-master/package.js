@@ -10,11 +10,9 @@ Package.describe({
 	documentation: 'README.md'
 });
 
-Npm.depends({
-	'clipboard': '1.5.12'
-});
-
 Package.onUse(function(api) {
+	api.versionsFrom('1.2.1');
+
 	api.use([
 		'mongo',
 		'ecmascript',
@@ -22,12 +20,18 @@ Package.onUse(function(api) {
 		'coffeescript',
 		'underscore',
 		'rocketchat:lib',
-		'meteorhacks:inject-initial'
+		'meteorhacks:inject-initial',
+		'meteorhacks:fast-render'
 	]);
+
 	api.addFiles('master/main.html', 'client');
 	api.addFiles('master/loading.html', 'client');
+	api.addFiles('master/pageLoading.html', 'client');
 	api.addFiles('master/error.html', 'client');
 	api.addFiles('master/logoLayout.html', 'client');
+
 	api.addFiles('master/main.coffee', 'client');
+
 	api.addFiles('server/inject.js', 'server');
+	api.addFiles('server/fastRender.js', 'server');
 });

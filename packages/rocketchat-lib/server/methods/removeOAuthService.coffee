@@ -1,8 +1,5 @@
 Meteor.methods
 	removeOAuthService: (name) ->
-
-		check name, String
-
 		if not Meteor.userId()
 			throw new Meteor.Error('error-invalid-user', "Invalid user", { method: 'removeOAuthService' })
 
@@ -16,7 +13,6 @@ Meteor.methods
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_token_path"
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_identity_path"
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_authorize_path"
-		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_scope"
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_token_sent_via"
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_id"
 		RocketChat.settings.removeById "Accounts_OAuth_Custom_#{name}_secret"

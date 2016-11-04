@@ -1,8 +1,5 @@
 Meteor.methods
 	saveUserPreferences: (settings) ->
-
-		check settings, Object
-
 		if Meteor.userId()
 			preferences = {}
 
@@ -40,9 +37,6 @@ Meteor.methods
 				preferences.mergeChannels = settings.mergeChannels is "1"
 			else
 				delete preferences.mergeChannels
-
-			if settings.unreadAlert?
-				preferences.unreadAlert = if settings.unreadAlert is "1" then true else false
 
 			preferences.desktopNotificationDuration = settings.desktopNotificationDuration - 0
 			preferences.viewMode = settings.viewMode || 0

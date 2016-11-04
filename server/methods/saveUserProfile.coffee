@@ -1,8 +1,5 @@
 Meteor.methods
 	saveUserProfile: (settings) ->
-
-		check settings, Object
-
 		unless RocketChat.settings.get("Accounts_AllowUserProfileChange")
 			throw new Meteor.Error('error-not-allowed', 'Not allowed', { method: 'saveUserProfile' })
 

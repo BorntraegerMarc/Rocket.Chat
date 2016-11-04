@@ -1,8 +1,4 @@
 RocketChat.models.Subscriptions.roleBaseQuery = function(userId, scope) {
-	if (scope == null) {
-		return;
-	}
-
 	var query = { 'u._id': userId };
 	if (!_.isUndefined(scope)) {
 		query.rid = scope;

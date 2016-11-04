@@ -24,12 +24,6 @@ Template.permissionsRole.helpers
 	hasUsers: ->
 		return Template.instance().usersInRole.get() && Template.instance().usersInRole.get().count() > 0
 
-	hasMore: ->
-		return Template.instance().limit?.get() <= Template.instance().usersInRole.get().count()
-
-	isLoading: ->
-		return 'btn-loading' unless Template.instance().ready?.get()
-
 	searchRoom: ->
 		return Template.instance().searchRoom.get()
 
@@ -162,11 +156,6 @@ Template.permissionsRole.events
 
 			FlowRouter.go 'admin-permissions'
 
-	'click .load-more': (e, t) ->
-		e.preventDefault()
-		e.stopPropagation()
-		t.limit.set t.limit.get() + 50
-
 	'autocompleteselect input[name=room]': (event, template, doc) ->
 		template.searchRoom.set(doc._id)
 
@@ -174,8 +163,6 @@ Template.permissionsRole.onCreated ->
 	@searchRoom = new ReactiveVar
 	@searchUsername = new ReactiveVar
 	@usersInRole = new ReactiveVar
-	@limit = new ReactiveVar 50
-	@ready = new ReactiveVar true
 
 	@subscribe 'roles', FlowRouter.getParam('name')
 
@@ -183,7 +170,5 @@ Template.permissionsRole.onCreated ->
 		if @searchRoom.get()
 			@subscribe 'roomSubscriptionsByRole', @searchRoom.get(), FlowRouter.getParam('name')
 
-		limit = @limit.get()
-		subscription = @subscribe 'usersInRole', FlowRouter.getParam('name'), @searchRoom.get(), limit
-		@ready.set subscription.ready()
+		@subscribe 'usersInRole', FlowRouter.getParam('name'), @searchRoom.get()
 		@usersInRole.set(RocketChat.models.Roles.findUsersInRole(FlowRouter.getParam('name'), @searchRoom.get(), { sort: { username: 1 } }))

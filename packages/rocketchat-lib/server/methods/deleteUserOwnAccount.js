@@ -1,8 +1,5 @@
 Meteor.methods({
 	deleteUserOwnAccount: function(password) {
-
-		check(password, String);
-
 		if (!Meteor.userId()) {
 			throw new Meteor.Error('error-invalid-user', 'Invalid user', { method: 'deleteUserOwnAccount' });
 		}

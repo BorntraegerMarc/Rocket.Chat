@@ -9,9 +9,13 @@ WordPress = new CustomOAuth 'wordpress', config
 
 if Meteor.isServer
 	Meteor.startup ->
-		RocketChat.settings.get 'API_Wordpress_URL', (key, value) ->
-			config.serverURL = value
-			WordPress.configure config
+		RocketChat.models.Settings.find({ _id: 'API_Wordpress_URL' }).observe
+			added: (record) ->
+				config.serverURL = RocketChat.settings.get 'API_Wordpress_URL'
+				WordPress.configure config
+			changed: (record) ->
+				config.serverURL = RocketChat.settings.get 'API_Wordpress_URL'
+				WordPress.configure config
 else
 	Meteor.startup ->
 		Tracker.autorun ->

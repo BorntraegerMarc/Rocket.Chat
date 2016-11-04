@@ -9,11 +9,11 @@ FileSystemStore = new UploadFS.store.Local({
 });
 
 FileUpload.FileSystem = class FileUploadFileSystem extends FileUploadBase {
-	constructor(meta, file) {
-		super(meta, file);
+	constructor(meta, file, data) {
+		super(meta, file, data);
 		this.handler = new UploadFS.Uploader({
 			store: FileSystemStore,
-			data: file,
+			data: data,
 			file: meta,
 			onError: (err) => {
 				var uploading = Session.get('uploading');
@@ -46,25 +46,14 @@ FileUpload.FileSystem = class FileUploadFileSystem extends FileUploadBase {
 				});
 			}
 		});
-
-		this.handler.onProgress = (file, progress) => {
-			this.onProgress(progress);
-		};
 	}
-
 	start() {
-		const uploading = Session.get('uploading') || [];
-		const item = {
-			id: this.id,
-			name: this.getFileName(),
-			percentage: 0
-		};
-		uploading.push(item);
-		Session.set('uploading', uploading);
 		return this.handler.start();
 	}
 
-	onProgress() {}
+	getProgress() {
+		return this.handler.getProgress();
+	}
 
 	stop() {
 		return this.handler.stop();

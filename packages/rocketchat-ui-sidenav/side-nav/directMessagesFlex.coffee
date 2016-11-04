@@ -16,7 +16,7 @@ Template.directMessagesFlex.helpers
 					noMatchTemplate: Template.userSearchEmpty
 					matchAll: true
 					filter:
-						exceptions: [Meteor.user().username]
+						exceptions: [Meteor.user().username, Meteor.user().name]
 					selector: (match) ->
 						return { term: match }
 					sort: 'username'
@@ -59,7 +59,7 @@ Template.directMessagesFlex.events
 					return handleError(err)
 				SideNav.closeFlex()
 				instance.clearForm()
-				FlowRouter.go 'direct', { username: username }, FlowRouter.current().queryParams
+				FlowRouter.go 'direct', { username: username }
 		else
 			Template.instance().error.set(err)
 

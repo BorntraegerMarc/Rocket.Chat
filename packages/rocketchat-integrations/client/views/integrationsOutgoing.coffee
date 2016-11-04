@@ -145,7 +145,6 @@ Template.integrationsOutgoing.events
 	"click .submit > .save": ->
 		enabled = $('[name=enabled]:checked').val().trim()
 		name = $('[name=name]').val().trim()
-		impersonateUser = $('[name=impersonateUser]:checked').val().trim()
 		alias = $('[name=alias]').val().trim()
 		emoji = $('[name=emoji]').val().trim()
 		avatar = $('[name=avatar]').val().trim()
@@ -157,7 +156,7 @@ Template.integrationsOutgoing.events
 		scriptEnabled = $('[name=scriptEnabled]:checked').val().trim()
 		script = $('[name=script]').val().trim()
 
-		if username is '' and impersonateUser is '0'
+		if username is ''
 			return toastr.error TAPi18n.__("The_username_is_required")
 
 		triggerWords = triggerWords.split(',')
@@ -190,7 +189,6 @@ Template.integrationsOutgoing.events
 			token: token if token isnt ''
 			script: script if script isnt ''
 			scriptEnabled: scriptEnabled is '1'
-			impersonateUser: impersonateUser is '1'
 
 		params = Template.instance().data.params?()
 		if params?.id?

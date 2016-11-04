@@ -5,12 +5,14 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+	api.versionsFrom('1.0');
+
 	api.use([
 		'coffeescript',
 		'ddp-rate-limiter',
 		'kadira:flow-router',
 		'rocketchat:lib',
-		'rocketchat:authorization'
+		'rocketchat:authorization@0.0.1'
 	]);
 
 	api.use('templating', 'client');

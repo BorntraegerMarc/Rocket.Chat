@@ -3,7 +3,8 @@
  */
 class LivechatCustomField extends RocketChat.models._Base {
 	constructor() {
-		super('livechat_custom_field');
+		super();
+		this._initModel('livechat_custom_field');
 	}
 
 	// FIND

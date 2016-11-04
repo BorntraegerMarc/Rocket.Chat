@@ -15,7 +15,9 @@ Meteor.startup ->
 				if error
 					return handleError(error)
 		validation: (message) ->
-			if not RocketChat.models.Subscriptions.findOne({ rid: message.rid })?
+			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
+
+			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
 				return false
 
 			return RocketChat.settings.get('Message_AllowStarring') and not message.starred
@@ -37,7 +39,9 @@ Meteor.startup ->
 				if error
 					return handleError(error)
 		validation: (message) ->
-			if not RocketChat.models.Subscriptions.findOne({ rid: message.rid })?
+			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
+
+			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
 				return false
 
 			return RocketChat.settings.get('Message_AllowStarring') and message.starred
@@ -55,9 +59,11 @@ Meteor.startup ->
 			RocketChat.MessageAction.hideDropDown()
 			RoomHistoryManager.getSurroundingMessages(message, 50)
 		validation: (message) ->
-			if not RocketChat.models.Subscriptions.findOne({ rid: message.rid })?
-				return false
+			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
 
+			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
+				return false
+				
 			return true
 		order: 100
 
@@ -75,8 +81,10 @@ Meteor.startup ->
 			$(event.currentTarget).attr('data-clipboard-text', RocketChat.MessageAction.getPermaLink(message._id));
 			toastr.success(TAPi18n.__('Copied'))
 		validation: (message) ->
-			if not RocketChat.models.Subscriptions.findOne({ rid: message.rid })?
-				return false
+			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
 
+			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
+				return false
+				
 			return true
 		order: 101

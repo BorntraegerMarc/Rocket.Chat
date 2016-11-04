@@ -1,3 +1,3 @@
 RocketChat.slashCommands.add 'unmute', null,
-	description: 'Unmute_someone_in_room'
+	description: TAPi18n.__ 'Unmute_someone_in_room'
 	params: '@username'

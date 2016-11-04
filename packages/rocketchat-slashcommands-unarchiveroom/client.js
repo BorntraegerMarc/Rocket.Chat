@@ -1,4 +1,4 @@
 RocketChat.slashCommands.add('unarchive', null, {
-	description: 'Unarchive',
+	description: TAPi18n.__('Unarchive'),
 	params: '#channel'
 });

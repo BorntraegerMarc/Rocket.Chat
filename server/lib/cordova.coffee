@@ -46,7 +46,6 @@ Meteor.methods
 
 configurePush = ->
 	if RocketChat.settings.get 'Push_debug'
-		Push.debug = true
 		console.log 'Push: configuring...'
 
 	if RocketChat.settings.get('Push_enable') is true

@@ -8,7 +8,7 @@ Template.messageAttachment.helpers
 			else
 				url = url + '&' + query
 
-		if Meteor.settings.public.sandstorm or url.match /^(https?:)?\/\//i
+		if url.match /^(https?:)?\/\//i
 			return url
 		else
 			return Meteor.absoluteUrl().replace(/\/$/, '') + __meteor_runtime_config__.ROOT_URL_PATH_PREFIX + url
@@ -43,7 +43,3 @@ Template.messageAttachment.helpers
 
 	time: ->
 		return moment(@ts).format(RocketChat.settings.get('Message_TimeFormat'))
-
-	injectIndex: (data, previousIndex, index) ->
-		data.index = previousIndex + '.attachments.' + index
-		return

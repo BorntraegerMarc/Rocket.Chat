@@ -47,13 +47,13 @@ Template.messagePopup.onCreated ->
 
 	template.value = new ReactiveVar
 
-	template.trigger = val(template.data.trigger, '')
+	template.trigger = val(template.data.trigger, '@')
 
 	template.triggerAnywhere = val(template.data.triggerAnywhere, true)
 
 	template.prefix = val(template.data.prefix, template.trigger)
 
-	template.suffix = val(template.data.suffix, '')
+	template.suffix = val(template.data.suffix, ' ')
 
 	if template.triggerAnywhere is true
 		template.matchSelectorRegex = val(template.data.matchSelectorRegex, new RegExp "(?:^| )#{template.trigger}[^\\s]*$")
@@ -68,7 +68,7 @@ Template.messagePopup.onCreated ->
 
 	template.up = =>
 		current = template.find('.popup-item.selected')
-		previous = $(current).prev('.popup-item')[0] or template.find('.popup-item:last-child')
+		previous = current.previousElementSibling or template.find('.popup-item:last-child')
 		if previous?
 			current.className = current.className.replace /\sselected/, ''
 			previous.className += ' selected'
@@ -76,8 +76,8 @@ Template.messagePopup.onCreated ->
 
 	template.down = =>
 		current = template.find('.popup-item.selected')
-		next = $(current).next('.popup-item')[0] or template.find('.popup-item')
-		if next?.classList.contains('popup-item')
+		next = current.nextElementSibling or template.find('.popup-item')
+		if next?
 			current.className = current.className.replace /\sselected/, ''
 			next.className += ' selected'
 			template.value.set next.getAttribute('data-id')
@@ -147,12 +147,8 @@ Template.messagePopup.onCreated ->
 		caret = getCursorPosition(template.input)
 		firstPartValue = value.substr 0, caret
 		lastPartValue = value.substr caret
-		getValue = this.getValue(template.value.curValue, template.data.collection, template.records.get(), firstPartValue)
 
-		if not getValue
-			return
-
-		firstPartValue = firstPartValue.replace(template.selectorRegex, template.prefix + getValue + template.suffix)
+		firstPartValue = firstPartValue.replace(template.selectorRegex, template.prefix + this.getValue(template.value.curValue, template.data.collection, firstPartValue) + template.suffix)
 
 		template.input.value = firstPartValue + lastPartValue
 
@@ -160,32 +156,25 @@ Template.messagePopup.onCreated ->
 
 	template.records = new ReactiveVar []
 	Tracker.autorun ->
-		if template.data.collection.findOne?
+		if template.data.collection.find?
 			template.data.collection.find().count()
 
 		filter = template.textFilter.get()
 		if filter?
-			filterCallback = (result) =>
-				template.hasData.set result?.length > 0
-				template.records.set result
+			result = template.data.getFilter template.data.collection, filter
+			if (template.data.collection instanceof Meteor.Collection and result.count? and result.count() is 0) or result?.length is 0
+				template.hasData.set false
+			else
+				template.hasData.set true
 
-				Meteor.defer =>
-					template.verifySelection()
+			template.records.set result
 
-			result = template.data.getFilter(template.data.collection, filter, filterCallback)
-			if result?
-				filterCallback result
+			Meteor.defer =>
+				template.verifySelection()
 
 
 Template.messagePopup.onRendered ->
-	if this.data.getInput?
-		this.input = this.data.getInput?()
-	else if this.data.input
-		this.input = this.parentTemplate().find(this.data.input)
-
-	if not this.input?
-		console.error 'Input not found for popup'
-
+	this.input = this.data.getInput?()
 	$(this.input).on 'keyup', this.onInputKeyup.bind this
 	$(this.input).on 'keydown', this.onInputKeydown.bind this
 

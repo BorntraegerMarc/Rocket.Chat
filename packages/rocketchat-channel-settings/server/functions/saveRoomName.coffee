@@ -1,7 +1,13 @@
-RocketChat.saveRoomName = (rid, name, user, sendMessage=true) ->
+RocketChat.saveRoomName = (rid, name) ->
+	if not Meteor.userId()
+		throw new Meteor.Error('error-invalid-user', "Invalid user", { function: 'RocketChat.saveRoomName' })
+
 	room = RocketChat.models.Rooms.findOneById rid
 
 	if room.t not in ['c', 'p']
+		throw new Meteor.Error 'error-not-allowed', 'Not allowed', { function: 'RocketChat.saveRoomName' }
+
+	unless RocketChat.authz.hasPermission(Meteor.userId(), 'edit-room', rid)
 		throw new Meteor.Error 'error-not-allowed', 'Not allowed', { function: 'RocketChat.saveRoomName' }
 
 	try
@@ -22,8 +28,7 @@ RocketChat.saveRoomName = (rid, name, user, sendMessage=true) ->
 	if RocketChat.models.Rooms.findOneByName name
 		throw new Meteor.Error 'error-duplicate-channel-name', 'A channel with name \'' + name + '\' exists', { function: 'RocketChat.saveRoomName', channel_name: name }
 
-	update = RocketChat.models.Rooms.setNameById(rid, name) and RocketChat.models.Subscriptions.updateNameAndAlertByRoomId(rid, name)
-	if update and sendMessage
-		RocketChat.models.Messages.createRoomRenamedWithRoomIdRoomNameAndUser rid, name, user
+	RocketChat.models.Rooms.setNameById rid, name
+	RocketChat.models.Subscriptions.updateNameAndAlertByRoomId rid, name
 
 	return name

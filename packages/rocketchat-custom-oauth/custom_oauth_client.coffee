@@ -1,4 +1,4 @@
-# Request custom OAuth credentials for the user
+# Request GitLab credentials for the user
 # @param options {optional}
 # @param credentialRequestCompleteCallback {Function} Callback function to call on
 #   completion. Takes one argument, credentialToken on success, or Error on
@@ -24,12 +24,8 @@ class CustomOAuth
 		if not Match.test options.authorizePath, String
 			options.authorizePath = '/oauth/authorize'
 
-		if not Match.test options.scope, String
-			options.scope = 'openid'
-
 		@serverURL = options.serverURL
 		@authorizePath = options.authorizePath
-		@scope = options.scope
 
 		if not /^https?:\/\/.+/.test @authorizePath
 			@authorizePath = @serverURL + @authorizePath
@@ -65,8 +61,7 @@ class CustomOAuth
 			'?client_id=' + config.clientId +
 			'&redirect_uri=' + OAuth._redirectUri(@name, config) +
 			'&response_type=code' +
-			'&state=' + OAuth._stateParam(loginStyle, credentialToken, options.redirectUrl) +
-			'&scope=' + @scope
+			'&state=' + OAuth._stateParam(loginStyle, credentialToken, options.redirectUrl)
 
 		OAuth.launchLogin
 			loginService: @name

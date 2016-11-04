@@ -3,7 +3,8 @@
  */
 class LivechatDepartmentAgents extends RocketChat.models._Base {
 	constructor() {
-		super('livechat_department_agents');
+		super();
+		this._initModel('livechat_department_agents');
 	}
 
 	findByDepartmentId(departmentId) {
@@ -60,10 +61,10 @@ class LivechatDepartmentAgents extends RocketChat.models._Base {
 		var findAndModify = Meteor.wrapAsync(collectionObj.findAndModify, collectionObj);
 
 		var agent = findAndModify(query, sort, update);
-		if (agent && agent.value) {
+		if (agent) {
 			return {
-				agentId: agent.value.agentId,
-				username: agent.value.username
+				agentId: agent.agentId,
+				username: agent.username
 			};
 		} else {
 			return null;

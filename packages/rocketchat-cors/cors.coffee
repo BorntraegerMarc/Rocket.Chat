@@ -11,9 +11,6 @@ WebApp.rawConnectHandlers.use (req, res, next) ->
 	if req.headers['content-type'] not in ['', undefined]
 		return next()
 
-	if req.url.indexOf('/ufs/') is 0
-		return next()
-
 	buf = ''
 	req.setEncoding('utf8')
 	req.on 'data', (chunk) -> buf += chunk
@@ -31,7 +28,7 @@ WebApp.rawConnectHandlers.use (req, res, next) ->
 
 
 WebApp.rawConnectHandlers.use (req, res, next) ->
-	if /^\/(api|_timesync|sockjs|tap-i18n|__cordova)(\/|$)/.test req.url
+	if /^\/(api|_timesync|sockjs|tap-i18n)(\/|$)/.test req.url
 		res.setHeader("Access-Control-Allow-Origin", "*")
 
 	# Block next handlers to override CORS with value http://meteor.local

@@ -1,9 +1,5 @@
 Meteor.methods
 	reportMessage: (message, description) ->
-
-		check message, Object
-		check description, String
-
 		if not Meteor.userId()
 			throw new Meteor.Error 'error-invalid-user', 'Invalid user', { method: 'reportMessage' }
 

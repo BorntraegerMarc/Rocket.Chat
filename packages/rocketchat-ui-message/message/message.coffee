@@ -14,7 +14,7 @@ Template.message.helpers
 		if this.avatar? and this.avatar[0] is '@'
 			return this.avatar.replace(/^@/, '')
 	getEmoji: (emoji) ->
-		return renderEmoji emoji
+		return emojione.toImage emoji
 	own: ->
 		return 'own' if this.u?._id is Meteor.userId()
 	timestamp: ->
@@ -30,15 +30,17 @@ Template.message.helpers
 			return 'temp'
 	body: ->
 		return Template.instance().body
+
 	system: ->
 		if RocketChat.MessageTypes.isSystemMessage(this)
 			return 'system'
+
 	edited: ->
 		return Template.instance().wasEdited
 
 	editTime: ->
 		if Template.instance().wasEdited
-			return moment(@editedAt).format(RocketChat.settings.get('Message_DateFormat') + ' ' + RocketChat.settings.get('Message_TimeFormat'))
+			return moment(@editedAt).format('LL LT') #TODO profile pref for 12hr/24hr clock?
 	editedBy: ->
 		return "" unless Template.instance().wasEdited
 		# try to return the username of the editor,
@@ -128,8 +130,17 @@ Template.message.helpers
 
 
 	actionLinks: ->
-		# remove 'method_id' and 'params' properties
-		return _.map(@actionLinks, (actionLink, key) -> _.extend({ id: key }, _.omit(actionLink, 'method_id', 'params')))
+		msgActionLinks = []
+
+		for key, actionLink of @actionLinks
+
+			#make this more generic? i.e. label is the first arg...etc?
+			msgActionLinks.push
+				label: actionLink.label
+				id: key
+				icon: actionLink.icon
+
+		return msgActionLinks
 
 	hideActionLinks: ->
 		return 'hidden' if _.isEmpty(@actionLinks)
@@ -139,8 +150,8 @@ Template.message.helpers
 		return
 
 	hideCog: ->
-		subscription = RocketChat.models.Subscriptions.findOne({ rid: this.rid });
-		return 'hidden' if not subscription?
+		room = RocketChat.models.Rooms.findOne({ _id: this.rid });
+		return 'hidden' if room.usernames.indexOf(Meteor.user().username) == -1
 
 	hideUsernames: ->
 		prefs = Meteor.user()?.settings?.preferences

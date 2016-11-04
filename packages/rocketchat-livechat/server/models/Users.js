@@ -19,10 +19,7 @@ RocketChat.models.Users.setOperator = function(_id, operator) {
  */
 RocketChat.models.Users.findOnlineAgents = function() {
 	var query = {
-		statusConnection: {
-			$exists: true,
-			$ne: 'offline'
-		},
+		statusConnection: { $ne: 'offline' },
 		statusLivechat: 'available',
 		roles: 'livechat-agent'
 	};
@@ -49,10 +46,7 @@ RocketChat.models.Users.findAgents = function() {
  */
 RocketChat.models.Users.findOnlineUserFromList = function(userList) {
 	var query = {
-		statusConnection: {
-			$exists: true,
-			$ne: 'offline'
-		},
+		statusConnection: { $ne: 'offline' },
 		statusLivechat: 'available',
 		roles: 'livechat-agent',
 		username: {
@@ -69,10 +63,7 @@ RocketChat.models.Users.findOnlineUserFromList = function(userList) {
  */
 RocketChat.models.Users.getNextAgent = function() {
 	var query = {
-		statusConnection: {
-			$exists: true,
-			$ne: 'offline'
-		},
+		statusConnection: { $ne: 'offline' },
 		statusLivechat: 'available',
 		roles: 'livechat-agent'
 	};
@@ -92,10 +83,10 @@ RocketChat.models.Users.getNextAgent = function() {
 	};
 
 	var user = findAndModify(query, sort, update);
-	if (user && user.value) {
+	if (user) {
 		return {
-			agentId: user.value._id,
-			username: user.value.username
+			agentId: user._id,
+			username: user.username
 		};
 	} else {
 		return null;
@@ -146,26 +137,6 @@ RocketChat.models.Users.setLivechatStatus = function(userId, status) {
 	return this.update(query, update);
 };
 
-/**
- * change all livechat agents livechat status to "not-available"
- */
-RocketChat.models.Users.closeOffice = function() {
-	self = this;
-	self.findAgents().forEach(function(agent) {
-		self.setLivechatStatus(agent._id, 'not-available');
-	});
-};
-
-/**
- * change all livechat agents livechat status to "available"
- */
-RocketChat.models.Users.openOffice = function() {
-	self = this;
-	self.findAgents().forEach(function(agent) {
-		self.setLivechatStatus(agent._id, 'available');
-	});
-};
-
 RocketChat.models.Users.updateLivechatDataByToken = function(token, key, value) {
 	const query = {
 		'profile.token': token
@@ -212,5 +183,5 @@ RocketChat.models.Users.getNextVisitorUsername = function() {
 
 	const livechatCount = findAndModify(query, null, update);
 
-	return 'guest-' + (livechatCount.value.value + 1);
+	return 'guest-' + (livechatCount.value + 1);
 };

@@ -19,7 +19,6 @@ RocketChat.callbacks.add('beforeSaveMessage', (msg) => {
 								'author_name' : jumpToMessage.u.username,
 								'author_icon' : getAvatarUrlFromUsername(jumpToMessage.u.username),
 								'message_link' : item.url,
-								'attachments' : jumpToMessage.attachments || [],
 								'ts': jumpToMessage.ts
 							});
 							item.ignoreParse = true;
@@ -30,4 +29,4 @@ RocketChat.callbacks.add('beforeSaveMessage', (msg) => {
 		});
 	}
 	return msg;
-}, RocketChat.callbacks.priority.LOW, 'jumpToMessage');
+}, RocketChat.callbacks.priority.LOW);

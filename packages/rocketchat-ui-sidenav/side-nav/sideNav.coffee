@@ -51,9 +51,6 @@ Template.sideNav.events
 	'scroll .rooms-list': ->
 		menu.updateUnreadBars()
 
-	'dropped .side-nav': (e) ->
-		e.preventDefault()
-
 Template.sideNav.onRendered ->
 	SideNav.init()
 	menu.init()

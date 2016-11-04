@@ -13,4 +13,4 @@ class Me
 
 RocketChat.slashCommands.add 'me', Me,
 	description: 'Displays_action_text'
-	params: 'your_message'
+	params: 'your message'
