@@ -3,7 +3,7 @@
 # Deployment
 1. cd /app/Rocket.Chat
 2. tmux
-3. sudo meteor --port 80
+3. sudo meteor --port 80 OR sudo meteor --port 80 --allow-superuser
 2. Press Ctrl + B and then press D
 
 # The Ultimate Open Source WebChat Platform
