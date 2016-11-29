@@ -1,5 +1,15 @@
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 
+# Install
+1. sudo su
+2. /app && cd /app
+3. apt-get update
+4. apt-get install git
+5. apt-get install tmux
+6. git clone https://github.com/BorntraegerMarc/Rocket.Chat
+7. export METEOR_NO_RELEASE_CHECK=true
+8. curl https://install.meteor.com/?release=1.2.1 | sh
+
 # Deployment
 1. cd /app/Rocket.Chat
 2. tmux
