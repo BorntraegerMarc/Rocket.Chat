@@ -1,6 +1,6 @@
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 
-# Install
+# Install (https://github.com/meteor/meteor/issues/7959)
 1. sudo su
 2. /app && cd /app
 3. apt-get update
