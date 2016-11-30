@@ -1,20 +1,19 @@
 ![Rocket.Chat logo](https://rocket.chat/images/logo/logo-dark.svg?v3)
 
 # Install (https://github.com/meteor/meteor/issues/7959)
-1. sudo su
-2. /app && cd /app
-3. apt-get update
-4. apt-get install git
-5. apt-get install tmux
+2. mkdir /home/marc_borntraeger/app && cd /home/marc_borntraeger/app
+3. sudo apt-get update
+4. sudo apt-get install git
+5. sudo apt-get install tmux
 6. git clone https://github.com/BorntraegerMarc/Rocket.Chat
 7. export METEOR_NO_RELEASE_CHECK=true
 8. curl https://install.meteor.com/?release=1.2.1 | sh
 9. iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
 
 # Deployment
-1. cd /app/Rocket.Chat
+1. cd /home/marc_borntraeger/app/Rocket.Chat
 2. tmux
-3. sudo meteor --port 80
+3. meteor
 2. Press Ctrl + B and then press D
 
 # The Ultimate Open Source WebChat Platform
