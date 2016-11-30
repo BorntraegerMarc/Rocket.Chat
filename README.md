@@ -9,7 +9,7 @@
 6. git clone https://github.com/BorntraegerMarc/Rocket.Chat
 7. export METEOR_NO_RELEASE_CHECK=true
 8. curl https://install.meteor.com/?release=1.2.1 | sh
-9. iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 
+9. iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
 
 # Deployment
 1. cd /app/Rocket.Chat
