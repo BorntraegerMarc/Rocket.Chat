@@ -13,7 +13,7 @@
 # Deployment
 1. cd /home/marc_borntraeger/app/Rocket.Chat
 2. tmux
-3. meteor
+3. meteor npm start
 2. Press Ctrl + B and then press D
 
 # The Ultimate Open Source WebChat Platform
